@@ -192,7 +192,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background-color: #000; /* Sfondo scuro se l'immagine ha trasparenze */
+    background-color: rgba(0, 0, 0, 0.3); /* Sfondo semi-trasparente per far risaltare il PNG */
 }
 
 .user .message-avatar {
