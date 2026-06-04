@@ -1,1 +1,381 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuMu AI - Intelligent Platform</title>
+    <!-- Collegamento a FontAwesome per le icone di servizio -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0b0b0e;
+            --bg-sidebar: #13131a;
+            --primary-gradient: linear-gradient(135deg, #9d5cef 0%, #2bb0ff 100%);
+            --purple-accent: #9d5cef;
+            --blue-accent: #2bb0ff;
+            --text-main: #f3f4f6;
+            --text-muted: #8e8ea0;
+            --input-bg: #1c1c24;
+            --border-color: #232330;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* BARRA LATERALE */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px 20px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .brand-container {
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        /* Logo principale nella sidebar */
+        .brand-logo {
+            max-width: 160px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 4px 10px rgba(157, 92, 239, 0.2));
+        }
+
+        .menu-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links a.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(43, 176, 255, 0.25);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* AREA PRINCIPALE */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* HEADER */
+        .header {
+            height: 75px;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(11, 11, 14, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h2 {
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        /* CONTENITORE CHAT */
+        .chat-container {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .message {
+            display: flex;
+            gap: 18px;
+            max-width: 75%;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        /* Avatar circolari nei messaggi */
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .bot .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #000; /* Nero di sfondo come nell'icona tagliata */
+        }
+
+        .user .message-avatar {
+            background-color: #3f3f46;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .message-text {
+            background-color: var(--bg-sidebar);
+            padding: 16px 20px;
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            line-height: 1.6;
+            color: #e4e4e7;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .user .message-text {
+            background-color: #272732;
+            border-radius: 16px;
+            border-top-right-radius: 4px;
+            color: #f4f4f5;
+        }
+
+        /* AREA DI INPUT PROMPT */
+        .input-area {
+            padding: 20px 40px 40px 40px;
+            background: linear-gradient(180deg, rgba(11,11,14,0) 0%, rgba(11,11,14,1) 50%);
+        }
+
+        .input-wrapper {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--purple-accent);
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #52526b;
+        }
+
+        .input-wrapper button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-wrapper button:hover {
+            opacity: 0.95;
+            transform: scale(1.03);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="top-section">
+            <!-- Integrazione del logo completo sumus.jpeg -->
+            <div class="brand-container">
+                <img src="sumus.jpeg" alt="SuMu Logo" class="brand-logo">
+            </div>
+            
+            <nav>
+                <div class="menu-label">Moduli SuMu</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active"><i class="fa-regular fa-comment-dots"></i> SuMu Chat</a></li>
+                    <li><a href="#"><i class="fa-solid fa-wand-magic-sparkles"></i> Creatività</a></li>
+                    <li><a href="#"><i class="fa-solid fa-bolt"></i> Automazioni</a></li>
+                    <li><a href="#"><i class="fa-solid fa-gear"></i> Impostazioni</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">U</div>
+            <div class="user-info">
+                <p style="font-size: 14px; font-weight: 600;">Premium User</p>
+                <p style="font-size: 12px; color: var(--text-muted);">utente@sumu.ai</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- AREA PRINCIPALE -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="header">
+            <h2>SuMu Chat <span style="font-size: 13px; color: var(--blue-accent); font-weight: 500; margin-left: 8px;">• Online</span></h2>
+            <div>
+                <i class="fa-solid fa-sliders" style="cursor: pointer; font-size: 18px; color: var(--text-muted);"></i>
+            </div>
+        </header>
+
+        <!-- AREA MESSAGGI -->
+        <div class="chat-container" id="chatContainer">
+            <!-- Messaggio di Benvenuto di SuMu -->
+            <div class="message bot">
+                <!-- Integrazione dell'icona quadrata Sumu.jpeg come avatar dell'AI -->
+                <div class="message-avatar">
+                    <img src="Sumu.jpeg" alt="SuMu Avatar">
+                </div>
+                <div class="message-text">
+                    Benvenuto su <strong>SuMu</strong>. Sono il tuo assistente intelligente. Come posso esserti utile oggi?
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT PROMPT -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <i class="fa-solid fa-paperclip" style="color: var(--text-muted); cursor: pointer; font-size: 18px;"></i>
+                <input type="text" id="userInput" placeholder="Invia un messaggio a SuMu...">
+                <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- CHAT INTERATTIVA (Simulazione) -->
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === '') return;
+
+            // Messaggio Utente
+            appendMessage(text, 'user');
+            userInput.value = '';
+
+            // Risposta simulata di SuMu
+            setTimeout(() => {
+                appendMessage("Ricevuto! Sto elaborando la tua richiesta con i moduli interni di SuMu.", 'bot');
+            }, 1000);
+        }
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            // Se è il bot usa l'immagine Sumu.jpeg, altrimenti usa la lettera dell'utente
+            const avatarContent = sender === 'bot' 
+                ? '<img src="Sumu.jpeg" alt="SuMu Avatar">' 
+                : 'U';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatarContent}</div>
+                <div class="message-text">${text}</div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
