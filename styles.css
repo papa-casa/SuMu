@@ -291,3 +291,17 @@ body {
         transform: translateY(0);
     }
 }
+/* Animazione dei pallini di digitazione (SuMu sta pensando...) */
+.dot-typing {
+    width: 8px;
+    height: 8px;
+    background-color: var(--text-muted);
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
